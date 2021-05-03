@@ -245,14 +245,31 @@ sub Qmq {
     system $cmd;
 }
 
-# Check if dependencies are installed
-
-
 ## Processing arguments
-if    ($opt eq '') { help }
-elsif ($opt eq '-S') { S }
-elsif ($opt eq '-U') { U }
-elsif ($opt eq '-Rs') { Rs }
-elsif ($opt eq '-Rsc') { Rsc }
-elsif ($opt eq '-Sy') { Sy }
-else                  { help }
+if    ($opt eq '')      { help }
+elsif ($opt eq '-S')    { S }
+elsif ($opt eq '-U')    { U }
+elsif ($opt eq '-Rs')   { Rs }
+elsif ($opt eq '-Rsc')  { Rsc }
+elsif ($opt eq '-Sy')   { Sy }
+elsif ($opt eq '-Syu')  { Syu }
+elsif ($opt eq '-Syuu') { Syuu }
+elsif ($opt eq '-A')    { A }
+elsif ($opt eq '-Ra')   { Ra }
+elsif ($opt eq '-Ss')   { Ss }
+elsif ($opt eq '-Q')    { Q }
+elsif ($opt eq '-Qi')   { Qi }
+elsif ($opt eq '-Si')   { Si }
+elsif ($opt eq '-Ql')   { Ql }
+elsif ($opt eq '-Fl')   { Fl }
+elsif ($opt eq '-Qo')   { Qo }
+elsif ($opt eq '-Qc')   { Qc }
+elsif ($opt eq '-Qu')   { Qu }
+elsif ($opt eq '-Sc')   { Sc }
+elsif ($opt eq '-Scc')  { Scc }
+elsif ($opt eq '-Qtdq') { Qtdq }
+elsif ($opt eq '-De')   { De }
+elsif ($opt eq '-Dd')   { Dd }
+elsif ($opt eq '-Sw')   { Sw }
+elsif ($opt eq '-Qmq')  { Qmq }
+else                    { print 'unknown argument' }
