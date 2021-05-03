@@ -39,7 +39,8 @@ EOF
 
 ## Identifying command-line arguments
 $opt = $ARGV[0];
-$after = join(" ", $ARGV[1]);
+shift @ARGV;
+$after = join " ", @ARGV;
 
 ## Defining subroutines
 
@@ -58,6 +59,7 @@ sub checkargs {
 # test
 sub testa {
     print "$after \n";
+    print "$#ARGV \n"
 }
 
 # -S
