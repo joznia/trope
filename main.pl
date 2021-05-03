@@ -44,6 +44,12 @@ $after = join " ", @ARGV;
 
 ## Defining subroutines
 
+# check for dependenceis
+sub checkdep {
+    my $check = `sh -c 'command -v $_[0]'`;
+    return $check;
+}
+
 # no arguments or --help
 sub help {
     die $help;
@@ -51,26 +57,26 @@ sub help {
 
 # no arguments for option
 sub checkargs {
-    if($after eq "") {
-        die "no package given\n";
+    if ($_[0] ne '') {
+        $mis = $_[0];
+    } else {
+        $mis = "package(s)"
+    }
+
+    if($after eq '') {
+        die "no $mis given\n";
     }
 }
 
-# test
-sub testa {
-    print "$after \n";
-    print "$#ARGV \n"
-}
-
 # -S
-sub sync {
+sub S {
     checkargs;
-    my $cmd = "sudo apt-get install ${after}";
+    my $cmd = "sudo apt-get install $after";
     system $cmd;
 };
 
 # -U
-sub debi {
+sub U {
     if(-e $after) {
         my $cmd = "sudo dpkg -i $after || sudo apt-get install -f";
         system $cmd;
@@ -80,60 +86,60 @@ sub debi {
 };
 
 # -Rs
-sub rm {
+sub Rs {
     checkargs;
     my $cmd = "sudo apt-get remove $after";
     system $cmd;
 };
 
 # -Rsc
-sub rmc {
+sub Rsc {
     checkargs;
     my $cmd = "sudo apt-get remove $after && sudo apt-get autoremove";
     system $cmd;
 }
 
 # -Sy
-sub syr {
+sub Sy {
     my $cmd = "sudo apt-get update";
     system $cmd;
 }
 
 # -Syu
-sub syu {
+sub Syu {
     my $cmd = "sudo apt-get update && sudo apt-get upgrade";
     system $cmd;
 }
 
 # -Syuu
-sub distu {
+sub Syuu {
     my $cmd = "sudo apt-get update && sudo apt-get dist-upgrade";
     system $cmd;
 }
 
 # -A
-sub addr {
+sub A {
     checkargs;
     my $cmd = "sudo add-apt-repository $after && sudo apt-get update";
     system $cmd;
 }
 
 # -Ra
-sub rmr {
+sub Ra {
     checkargs;
     my $cmd = "sudo add-apt-repository --remove $after && sudo apt-get update";
     system $cmd;
 }
 
 # -Ss
-sub se {
+sub Ss {
     checkargs;
     my $cmd = "apt-cache search $after";
     system $cmd;
 }
 
 # -Q
-sub sei {
+sub Q {
     if($after eq '') {
         my $cmd = "dpkg -l | awk '/^i/ { print \$2 }'";
         system $cmd;
@@ -144,22 +150,109 @@ sub sei {
 }
 
 # -Qi
-sub seii {
+sub Qi {
     checkargs;
     my $cmd = "dpkg -s $after";
     system $cmd;
 }
 
 # -Si
-sub ser {
+sub Si {
     checkargs;
     my $cmd = "apt-cache show $after";
     system $cmd;
 }
 
+# -Ql
+sub Ql {
+    checkargs;
+    my $cmd = "dpkg -L $after";
+    system $cmd;
+}
+
+# -Fl
+sub Fl {
+    checkdep 'apt-file' or die 'arg -Qmq requires \'aptitude\' to be installed\n';
+    checkargs;
+    my $cmd = "apt-file list $after";
+    system $cmd;
+}
+
+# -Qo
+sub Qo {
+    checkargs "file(s)";
+    my $cmd = "dpkg -S $after";
+    system $cmd;
+}
+
+# -Qc
+sub Qc {
+    checkargs;
+    my $cmd = "apt-get changelog $after";
+    system $cmd;
+}
+
+# -Qu
+sub Qu {
+    my $cmd = "sudo apt-get -u upgrade --assume-no";
+    system $cmd;
+}
+
+# -Sc
+sub Sc {
+    my $cmd = "sudo apt-get autoclean";
+    system $cmd;
+}
+
+# -Scc
+sub Scc {
+    my $cmd = "sudo apt-get clean";
+    system $cmd;
+}
+
+# -Qtdq
+sub Qtdq {
+    my $cmd = "sudo apt-get autoremove";
+    system $cmd;
+}
+
+# -De
+sub De {
+    checkargs;
+    my $cmd = "sudo apt-mark manual $after";
+    system $cmd;
+}
+
+# -Dd
+sub Dd {
+    checkargs;
+    my $cmd = "sudo apt-mark auto $after";
+    system $cmd;
+}
+
+# -Sw
+sub Sw {
+    checkargs;
+    my $cmd = "sudo apt-get install --download-only $after";
+    system $cmd;
+}
+
+# -Qmq
+sub Qmq {
+    checkdep 'aptitude' or die 'arg -Qmq requires \'aptitude\' to be installed\n';
+    checkargs;
+    my $cmd = "sudo aptitude purge '~o' $after";
+    system $cmd;
+}
+
+# Check if dependencies are installed
+
+
 ## Processing arguments
-if    ($opt eq '-S') { sync }
-elsif ($opt eq '-U') { debi }
-elsif ($opt eq '-Rs') { rm }
-elsif ($opt eq 't') { testa }
+if    ($opt eq '') { help }
+elsif ($opt eq '-S') { S }
+elsif ($opt eq '-U') { U }
+elsif ($opt eq '-Rs') { Rs }
+elsif ($opt eq '-Rsc') { Rsc }
+elsif ($opt eq '-Sy') { Sy }
 else                  { help }
