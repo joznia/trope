@@ -3,7 +3,7 @@
 ### Installation
 `install.pl` arguments:
 * `-u`: uninstall space
-* `-s`: install as usual, but also symlink `/usr/bin/space` to `/usr/bin/pacman`, allowing usage to be almost identical to pacman on Arch
+* `-s`: install as usual, but also symlink `/usr/bin/space` to `/usr/bin/pacman`
 ~~~
 git clone https://github.com/joznia/space.git
 cd space
