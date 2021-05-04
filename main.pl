@@ -13,7 +13,8 @@ space: --help
 -S     : install a package
 -U     : install a .deb file
 -Rs    : remove a package
--Rsc   : remove a package and run -Qtdq or autoremove
+-Rns   : remove a package (same as -Rs)
+-Rsc   : remove a package and remove orphans
 -Sy    : sync the repositories
 -Syu   : perform a system upgrade
 -Syuu  : perform a distribution upgrade
@@ -31,6 +32,7 @@ space: --help
 -Sc    : remove now-undownloadable packages from the local package cache
 -Scc   : remove all downloaded packages from the local package cache
 -Qtdq  : remove orphan packages
+-c     : remove orphan packages (same as -Qtdq)
 -De    : mark an automatically installed package as manually installed
 -Dd    : mark a manually installed package as automatic
 -Sw    : download a package without installing it
@@ -306,6 +308,7 @@ elsif ($opt eq '-Qu')    { Qu }
 elsif ($opt eq '-Sc')    { Sc }
 elsif ($opt eq '-Scc')   { Scc }
 elsif ($opt eq '-Qtdq')  { Qtdq }
+elsif ($opt eq '-c')     { Qtdq }
 elsif ($opt eq '-De')    { De }
 elsif ($opt eq '-Dd')    { Dd }
 elsif ($opt eq '-Sw')    { Sw }
