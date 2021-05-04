@@ -1,6 +1,9 @@
 # space
 ## apt/dpkg wrapper written in Perl and with a pacman syntax
 ### Installation
+`install.pl` arguments:
+* `-u`: uninstall space
+* `-s`: install as usual, but also symlink `/usr/bin/space` to `/usr/bin/pacman`, allowing usage to be almost identical to pacman on Arch
 ~~~
 git clone https://github.com/joznia/space.git
 cd space
