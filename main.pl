@@ -198,9 +198,12 @@ sub Fl {
 
 # -Qo
 sub Qo {
-    checkargs "file(s)";
-    my $cmd = "dpkg -S $after";
-    system $cmd;
+    if (-e $after) {
+        my $cmd = "dpkg -S $after";
+        system $cmd;
+    } else {
+        die "file '$after' invalid \n"
+    }
 }
 
 # -Qc
