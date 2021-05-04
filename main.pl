@@ -308,4 +308,4 @@ elsif ($opt eq '-Dd')   { Dd }
 elsif ($opt eq '-Sw')   { Sw }
 elsif ($opt eq '-Qmq')  { Qmq }
 elsif ($opt eq '-Cu')   { Cu }
-else                    { print 'unknown argument \n' }
+else                    { print "unknown argument \n" }
