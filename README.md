@@ -15,7 +15,7 @@ sudo ./install.pl
 * `-U`: install a .deb file
 * `-Rs`: remove a package
 * `-Rns`: remove a package (same as -Rs)
-* `-Rsc`: remove a package and run -Qtdq or autoremove
+* `-Rsc`: remove a package and remove orphans
 * `-Sy`: sync the repositories
 * `-Syu`: perform a system upgrade
 * `-Syuu`: perform a distribution upgrade
