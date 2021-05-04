@@ -24,7 +24,7 @@ space: --help
 -Qi    : display installed package information
 -Si    : display remote package information
 -Ql    : display files provided by an installed package
--Fl    : display files provided by a remote package
+-Fl    : display files provided by a remote package (requires 'apt-file')
 -Qo    : find which package provides which file
 -Qc    : show the changelog of a package
 -Qu    : list packages which are upgradable
@@ -35,6 +35,7 @@ space: --help
 -Dd    : mark a manually installed package as automatic
 -Sw    : download a package without installing it
 -Qmq   : remove packages not included in any repositories (requires 'aptitude')
+-Cu    : update the local package file cache (requires 'apt-file')
 EOF
 
 ## Identifying command-line arguments
@@ -43,6 +44,14 @@ shift @ARGV;
 $after = join " ", @ARGV;
 
 ## Defining subroutines
+
+# check if user is root
+sub checksu {
+    my $thisf = (caller(0)) [3];
+    if ($> ne 0) {
+        die "arg '$_[0]' requires root \n"
+    }
+}
 
 # check for dependenceis
 sub checkdep {
@@ -70,15 +79,17 @@ sub checkargs {
 
 # -S
 sub S {
+    checksu '-S';
     checkargs;
-    my $cmd = "sudo apt-get install $after";
+    my $cmd = "apt-get install $after";
     system $cmd;
 };
 
 # -U
 sub U {
+    checksu '-U';
     if(-e $after) {
-        my $cmd = "sudo dpkg -i $after || sudo apt-get install -f";
+        my $cmd = "dpkg -i $after || apt-get install -f";
         system $cmd;
     } else {
         die "file '$after' is invalid \n";
@@ -87,47 +98,54 @@ sub U {
 
 # -Rs
 sub Rs {
+    checksu '-Rs';
     checkargs;
-    my $cmd = "sudo apt-get remove $after";
+    my $cmd = "apt-get remove $after";
     system $cmd;
 };
 
 # -Rsc
 sub Rsc {
+    checksu '-Rsc';
     checkargs;
-    my $cmd = "sudo apt-get remove $after && sudo apt-get autoremove";
+    my $cmd = "apt-get remove $after && apt-get autoremove";
     system $cmd;
 }
 
 # -Sy
 sub Sy {
-    my $cmd = "sudo apt-get update";
+    checksu '-Sy';
+    my $cmd = "apt-get update";
     system $cmd;
 }
 
 # -Syu
 sub Syu {
-    my $cmd = "sudo apt-get update && sudo apt-get upgrade";
+    checksu '-Syu';
+    my $cmd = "apt-get update && apt-get upgrade";
     system $cmd;
 }
 
 # -Syuu
 sub Syuu {
-    my $cmd = "sudo apt-get update && sudo apt-get dist-upgrade";
+    checksu '-Syuu';
+    my $cmd = "apt-get update && apt-get dist-upgrade";
     system $cmd;
 }
 
 # -A
 sub A {
+    checksu '-A';
     checkargs;
-    my $cmd = "sudo add-apt-repository $after && sudo apt-get update";
+    my $cmd = "add-apt-repository $after && apt-get update";
     system $cmd;
 }
 
 # -Ra
 sub Ra {
+    checksu '-Ra';
     checkargs;
-    my $cmd = "sudo add-apt-repository --remove $after && sudo apt-get update";
+    my $cmd = "add-apt-repository --remove $after && apt-get update";
     system $cmd;
 }
 
@@ -172,7 +190,7 @@ sub Ql {
 
 # -Fl
 sub Fl {
-    checkdep 'apt-file' or die 'arg -Qmq requires \'aptitude\' to be installed\n';
+    checkdep 'apt-file' or die "arg -Fl requires 'apt-file' to be installed \n";
     checkargs;
     my $cmd = "apt-file list $after";
     system $cmd;
@@ -194,54 +212,70 @@ sub Qc {
 
 # -Qu
 sub Qu {
-    my $cmd = "sudo apt-get -u upgrade --assume-no";
+    checksu '-Qu';
+    my $cmd = "apt-get -u upgrade --assume-no";
     system $cmd;
 }
 
 # -Sc
 sub Sc {
-    my $cmd = "sudo apt-get autoclean";
+    checksu '-Sc';
+    my $cmd = "apt-get autoclean";
     system $cmd;
 }
 
 # -Scc
 sub Scc {
-    my $cmd = "sudo apt-get clean";
+    checksu '-Scc';
+    my $cmd = "apt-get clean";
     system $cmd;
 }
 
 # -Qtdq
 sub Qtdq {
-    my $cmd = "sudo apt-get autoremove";
+    checksu '-Qtdq';
+    my $cmd = "apt-get autoremove";
     system $cmd;
 }
 
 # -De
 sub De {
+    checksu '-De';
     checkargs;
-    my $cmd = "sudo apt-mark manual $after";
+    my $cmd = "apt-mark manual $after";
     system $cmd;
 }
 
 # -Dd
 sub Dd {
+    checksu '-Dd';
     checkargs;
-    my $cmd = "sudo apt-mark auto $after";
+    my $cmd = "apt-mark auto $after";
     system $cmd;
 }
 
 # -Sw
 sub Sw {
+    checksu '-Sw';
     checkargs;
-    my $cmd = "sudo apt-get install --download-only $after";
+    my $cmd = "apt-get install --download-only $after";
     system $cmd;
 }
 
 # -Qmq
 sub Qmq {
+    checksu '-Qmq';
     checkdep 'aptitude' or die 'arg -Qmq requires \'aptitude\' to be installed\n';
     checkargs;
-    my $cmd = "sudo aptitude purge '~o' $after";
+    my $cmd = "aptitude purge '~o' $after";
+    system $cmd;
+}
+
+# -Cu
+sub Cu {
+    checksu '-Cu';
+    checkdep 'apt-file' or die "arg -Cu requires 'apt-file' to be installed \n";
+    my $cmd = "sudo apt-file update";
     system $cmd;
 }
 
@@ -250,6 +284,7 @@ if    ($opt eq '')      { help }
 elsif ($opt eq '-S')    { S }
 elsif ($opt eq '-U')    { U }
 elsif ($opt eq '-Rs')   { Rs }
+elsif ($opt eq '-Rns')  { Rs }
 elsif ($opt eq '-Rsc')  { Rsc }
 elsif ($opt eq '-Sy')   { Sy }
 elsif ($opt eq '-Syu')  { Syu }
@@ -272,4 +307,5 @@ elsif ($opt eq '-De')   { De }
 elsif ($opt eq '-Dd')   { Dd }
 elsif ($opt eq '-Sw')   { Sw }
 elsif ($opt eq '-Qmq')  { Qmq }
-else                    { print 'unknown argument' }
+elsif ($opt eq '-Cu')   { Cu }
+else                    { print 'unknown argument \n' }
