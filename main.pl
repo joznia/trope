@@ -136,7 +136,7 @@ sub Syuu {
 # -A
 sub A {
     checksu '-A';
-    checkargs;
+    checkargs 'repository';
     my $cmd = "add-apt-repository $after && apt-get update";
     system $cmd;
 }
@@ -144,7 +144,7 @@ sub A {
 # -Ra
 sub Ra {
     checksu '-Ra';
-    checkargs;
+    checkargs 'repository';
     my $cmd = "add-apt-repository --remove $after && apt-get update";
     system $cmd;
 }

@@ -4,6 +4,7 @@
 ~~~
 git clone https://github.com/joznia/space.git
 cd space
+chmod +x install.pl
 sudo ./install.pl # run with -u flag to uninstall
 ~~~
 ### Usage
