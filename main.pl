@@ -268,9 +268,8 @@ sub Sw {
 # -Qmq
 sub Qmq {
     checksu '-Qmq';
-    checkdep 'aptitude' or die 'arg -Qmq requires \'aptitude\' to be installed\n';
-    checkargs;
-    my $cmd = "aptitude purge '~o' $after";
+    checkdep 'aptitude' or die "arg -Qmq requires 'aptitude' to be installed \n";
+    my $cmd = "aptitude purge '~o'";
     system $cmd;
 }
 
