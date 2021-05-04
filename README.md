@@ -14,6 +14,7 @@ sudo ./install.pl
 * `-S`: install a package
 * `-U`: install a .deb file
 * `-Rs`: remove a package
+* `-Rns`: remove a package (same as -Rs)
 * `-Rsc`: remove a package and run -Qtdq or autoremove
 * `-Sy`: sync the repositories
 * `-Syu`: perform a system upgrade
@@ -32,6 +33,7 @@ sudo ./install.pl
 * `-Sc`: remove now-undownloadable packages from the local package cache
 * `-Scc`: remove all downloaded packages from the local package cache
 * `-Qtdq`: remove orphan packages
+* `-c`: remove orphan packages (same as -Qtdq)
 * `-De`: mark an automatically installed package as manually installed
 * `-Dd`: mark a manually installed package as automatic
 * `-Sw`: download a package without installing it
