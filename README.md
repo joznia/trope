@@ -5,6 +5,7 @@
 * `-u`: uninstall yummi
 * `-s`: install as usual, but also symlink `/usr/bin/yummi` to `/usr/bin/pacman`
 ~~~
+sudo dnf -y install perl-File-Copy
 git clone https://github.com/joznia/yummi.git
 cd yummi
 chmod +x install.pl
@@ -19,14 +20,12 @@ sudo ./install.pl
 * `-Sy`: sync the repositories
 * `-Syu`: perform a system upgrade
 * `-Syuu`: perform a distribution upgrade
-* `-A`: add a repo, eg a copr repo
-* `-Ra`: remove a repo
 * `-Ss`: search for a package via regex
 * `-Q`: search for a locally installed package
 * `-Qi`: display installed package information
 * `-Si`: display remote package information
 * `-Ql`: display files provided by an installed package
-* `-Fl`: display files provided by a remote package (requires 'apt-file')
+* `-Fl`: display files provided by a remote package
 * `-Qo`: find which package provides which file
 * `-Qc`: show the changelog of a package
 * `-Qu`: list packages which are upgradable
@@ -37,7 +36,6 @@ sudo ./install.pl
 * `-De`: mark an automatically installed package as manually installed
 * `-Dd`: mark a manually installed package as automatic
 * `-Sw`: download a package without installing it
-* `-Qmq`: remove packages not included in any repositories (requires 'aptitude')
-* `-Cu`: update the local package file cache (requires 'apt-file')
+* `-Qmq`: remove packages not included in any repositories 
 
 
