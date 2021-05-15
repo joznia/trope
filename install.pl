@@ -3,7 +3,7 @@
 use File::Copy;
 
 $src = "./main.pl";
-$dest = "/usr/bin/space";
+$dest = "/usr/bin/yummi";
 $destp = "/usr/bin/pacman";
 
 sub base {

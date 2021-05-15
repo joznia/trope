@@ -1,9 +1,9 @@
 #!/usr/bin/env perl
 
 =begin
-Welcome to SPACE (Syntax of Pacman, Apt Control Environment).
+Welcome to yummi.
 
-This is an apt/dpkg wrapper written in Perl and aims to have a syntax similar to Arch's 'pacman'.
+This is a dnf/rpm wrapper written in Perl and aims to have a syntax similar to Arch's 'pacman'.
 
 This is free software licensed under the GNU GPL v3.
 =cut
@@ -11,21 +11,18 @@ This is free software licensed under the GNU GPL v3.
 $help = <<"EOF";
 space: --help
 -S     : install a package
--U     : install a .deb file
+-U     : install a local .rpm
 -Rs    : remove a package
 -Rns   : remove a package (same as -Rs)
 -Rsc   : remove a package and remove orphans
--Sy    : sync the repositories
 -Syu   : perform a system upgrade
 -Syuu  : perform a distribution upgrade
--A     : add an apt repo (e.g. a PPA)
--Ra    : remove an apt repo
 -Ss    : search for a package via regex
 -Q     : search for a locally installed package
 -Qi    : display installed package information
 -Si    : display remote package information
 -Ql    : display files provided by an installed package
--Fl    : display files provided by a remote package (requires 'apt-file')
+-Fl    : display files provided by a remote package 
 -Qo    : find which package provides which file
 -Qc    : show the changelog of a package
 -Qu    : list packages which are upgradable
@@ -36,8 +33,7 @@ space: --help
 -De    : mark an automatically installed package as manually installed
 -Dd    : mark a manually installed package as automatic
 -Sw    : download a package without installing it
--Qmq   : remove packages not included in any repositories (requires 'aptitude')
--Cu    : update the local package file cache (requires 'apt-file')
+-Qmq   : remove packages not included in any repositories 
 EOF
 
 ## Identifying command-line arguments
@@ -53,12 +49,6 @@ sub checksu {
     if ($> ne 0) {
         die "arg '$_[0]' requires root \n"
     }
-}
-
-# check for dependenceis
-sub checkdep {
-    my $check = `sh -c 'command -v $_[0]'`;
-    return $check;
 }
 
 # no arguments or --help
@@ -83,7 +73,7 @@ sub checkargs {
 sub S {
     checksu '-S';
     checkargs;
-    my $cmd = "apt-get install $after";
+    my $cmd = "dnf install $after";
     system $cmd;
 };
 
@@ -91,7 +81,7 @@ sub S {
 sub U {
     checksu '-U';
     if(-e $after) {
-        my $cmd = "dpkg -i $after || apt-get install -f";
+        my $cmd = "dnf localinstall $after";
         system $cmd;
     } else {
         die "file '$after' is invalid \n";
@@ -102,7 +92,7 @@ sub U {
 sub Rs {
     checksu '-Rs';
     checkargs;
-    my $cmd = "apt-get remove $after";
+    my $cmd = "dnf remove $after";
     system $cmd;
 };
 
@@ -110,61 +100,38 @@ sub Rs {
 sub Rsc {
     checksu '-Rsc';
     checkargs;
-    my $cmd = "apt-get remove $after && apt-get autoremove";
-    system $cmd;
-}
-
-# -Sy
-sub Sy {
-    checksu '-Sy';
-    my $cmd = "apt-get update";
+    my $cmd = "dnf remove $after && dnf autoremove";
     system $cmd;
 }
 
 # -Syu
 sub Syu {
     checksu '-Syu';
-    my $cmd = "apt-get update && apt-get upgrade";
+    my $cmd = "dnf upgrade --refresh";
     system $cmd;
 }
 
 # -Syuu
 sub Syuu {
     checksu '-Syuu';
-    my $cmd = "apt-get update && apt-get dist-upgrade";
-    system $cmd;
-}
-
-# -A
-sub A {
-    checksu '-A';
-    checkargs 'repository';
-    my $cmd = "add-apt-repository $after && apt-get update";
-    system $cmd;
-}
-
-# -Ra
-sub Ra {
-    checksu '-Ra';
-    checkargs 'repository';
-    my $cmd = "add-apt-repository --remove $after && apt-get update";
+    my $cmd = "dnf distro-sync";
     system $cmd;
 }
 
 # -Ss
 sub Ss {
     checkargs;
-    my $cmd = "apt-cache search $after";
+    my $cmd = "dnf search $after";
     system $cmd;
 }
 
 # -Q
 sub Q {
     if($after eq '') {
-        my $cmd = "dpkg -l | awk '/^i/ { print \$2 }'";
+        my $cmd = "rpm -qa";
         system $cmd;
     } else {
-        my $cmd = "dpkg -l | awk '/^i/ { print \$2 }' | grep $after";
+        my $cmd = "rpm -qa $after";
         system $cmd;
     }
 }
@@ -172,36 +139,35 @@ sub Q {
 # -Qi
 sub Qi {
     checkargs;
-    my $cmd = "dpkg -s $after";
+    my $cmd = "dnf info installed $after";
     system $cmd;
 }
 
 # -Si
 sub Si {
     checkargs;
-    my $cmd = "apt-cache show $after";
+    my $cmd = "dnf info $after";
     system $cmd;
 }
 
 # -Ql
 sub Ql {
     checkargs;
-    my $cmd = "dpkg -L $after";
+    my $cmd = "dnf repoquery -l $after";
     system $cmd;
 }
 
 # -Fl
 sub Fl {
-    checkdep 'apt-file' or die "arg -Fl requires 'apt-file' to be installed \n";
     checkargs;
-    my $cmd = "apt-file list $after";
+    my $cmd = "dnf repoquery -l $after";
     system $cmd;
 }
 
 # -Qo
 sub Qo {
     if (-e $after) {
-        my $cmd = "dpkg -S $after";
+        my $cmd = "rpm -qf $after";
         system $cmd;
     } else {
         die "file '$after' invalid \n"
@@ -211,35 +177,27 @@ sub Qo {
 # -Qc
 sub Qc {
     checkargs;
-    my $cmd = "apt-get changelog $after";
+    my $cmd = "dnf changelog $after";
     system $cmd;
 }
 
 # -Qu
 sub Qu {
-    checksu '-Qu';
-    my $cmd = "apt-get -u upgrade --assume-no";
+    my $cmd = "dnf list updates";
     system $cmd;
 }
 
 # -Sc
 sub Sc {
     checksu '-Sc';
-    my $cmd = "apt-get autoclean";
-    system $cmd;
-}
-
-# -Scc
-sub Scc {
-    checksu '-Scc';
-    my $cmd = "apt-get clean";
+    my $cmd = "dnf clean all";
     system $cmd;
 }
 
 # -Qtdq
 sub Qtdq {
     checksu '-Qtdq';
-    my $cmd = "apt-get autoremove";
+    my $cmd = "dnf autoremove";
     system $cmd;
 }
 
@@ -247,7 +205,7 @@ sub Qtdq {
 sub De {
     checksu '-De';
     checkargs;
-    my $cmd = "apt-mark manual $after";
+    my $cmd = "dnf mark install $after";
     system $cmd;
 }
 
@@ -255,7 +213,7 @@ sub De {
 sub Dd {
     checksu '-Dd';
     checkargs;
-    my $cmd = "apt-mark auto $after";
+    my $cmd = "dnf mark remove $after";
     system $cmd;
 }
 
@@ -263,23 +221,14 @@ sub Dd {
 sub Sw {
     checksu '-Sw';
     checkargs;
-    my $cmd = "apt-get install --download-only $after";
+    my $cmd = "dnf download $after";
     system $cmd;
 }
 
 # -Qmq
 sub Qmq {
     checksu '-Qmq';
-    checkdep 'aptitude' or die "arg -Qmq requires 'aptitude' to be installed \n";
-    my $cmd = "aptitude purge '~o'";
-    system $cmd;
-}
-
-# -Cu
-sub Cu {
-    checksu '-Cu';
-    checkdep 'apt-file' or die "arg -Cu requires 'apt-file' to be installed \n";
-    my $cmd = "sudo apt-file update";
+    my $cmd = "dnf repoquery --extras";
     system $cmd;
 }
 
@@ -294,8 +243,6 @@ elsif ($opt eq '-Rsc')   { Rsc }
 elsif ($opt eq '-Sy')    { Sy }
 elsif ($opt eq '-Syu')   { Syu }
 elsif ($opt eq '-Syuu')  { Syuu }
-elsif ($opt eq '-A')     { A }
-elsif ($opt eq '-Ra')    { Ra }
 elsif ($opt eq '-Ss')    { Ss }
 elsif ($opt eq '-Q')     { Q }
 elsif ($opt eq '-Qi')    { Qi }
@@ -306,12 +253,11 @@ elsif ($opt eq '-Qo')    { Qo }
 elsif ($opt eq '-Qc')    { Qc }
 elsif ($opt eq '-Qu')    { Qu }
 elsif ($opt eq '-Sc')    { Sc }
-elsif ($opt eq '-Scc')   { Scc }
+elsif ($opt eq '-Scc')   { Sc }
 elsif ($opt eq '-Qtdq')  { Qtdq }
 elsif ($opt eq '-c')     { Qtdq }
 elsif ($opt eq '-De')    { De }
 elsif ($opt eq '-Dd')    { Dd }
 elsif ($opt eq '-Sw')    { Sw }
 elsif ($opt eq '-Qmq')   { Qmq }
-elsif ($opt eq '-Cu')    { Cu }
 else                     { print "unknown argument \n" }

@@ -1,26 +1,26 @@
-# space
-## apt/dpkg wrapper written in Perl and with a pacman syntax
+# yummi
+## dnf/rpm wrapper written in Perl and with a pacman syntax
 ### Installation
 `install.pl` arguments:
-* `-u`: uninstall space
-* `-s`: install as usual, but also symlink `/usr/bin/space` to `/usr/bin/pacman`
+* `-u`: uninstall yummi
+* `-s`: install as usual, but also symlink `/usr/bin/yummi` to `/usr/bin/pacman`
 ~~~
-git clone https://github.com/joznia/space.git
-cd space
+git clone https://github.com/joznia/yummi.git
+cd yummi
 chmod +x install.pl
 sudo ./install.pl
 ~~~
 ### Usage
 * `-S`: install a package
-* `-U`: install a .deb file
+* `-U`: install a local `.rpm`
 * `-Rs`: remove a package
 * `-Rns`: remove a package (same as -Rs)
 * `-Rsc`: remove a package and remove orphans
 * `-Sy`: sync the repositories
 * `-Syu`: perform a system upgrade
 * `-Syuu`: perform a distribution upgrade
-* `-A`: add an apt repo (e.g. a PPA)
-* `-Ra`: remove an apt repo
+* `-A`: add a repo, eg a copr repo
+* `-Ra`: remove a repo
 * `-Ss`: search for a package via regex
 * `-Q`: search for a locally installed package
 * `-Qi`: display installed package information
