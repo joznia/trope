@@ -1,9 +1,22 @@
 #!/usr/bin/env bash
 
-cd ~
-git clone https://github.com/joznia/yummi.git yummi-auto
-cd yummi-auto
-chmod +x install.sh
-sudo ./install.sh
-cd ..
-rm -rf yummi-auto
+SRCDIR="${HOME}/yummi-auto"
+SRC="./main.py"
+DEST="/usr/bin/yummi"
+DESTP="/usr/bin/pacman"
+
+die () {
+    if [ $? -gt 0 ]; then
+        echo "$*" 1>&2 ; exit 1;
+    fi
+}
+
+git clone https://github.com/joznia/yummi.git ${HOME}/yummi-auto
+cd ${HOME}/yummi-auto
+cp $SRC $DEST 
+chmod 0755 $DEST
+ln -sf $DEST $DESTP
+chmod 0755 $DESTP
+
+rm -rf ${HOME}/yummi-auto
+
