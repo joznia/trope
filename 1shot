@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# YUMmi AIO installer
+
+SRCDIR="${HOME}/yummi-oneshot"
+SRC="./main.py"
+DEST="/usr/bin/yummi"
+DESTP="/usr/bin/pacman"
+
+die () {
+    if [ $? -gt 0 ]; then
+        echo "$*" 1>&2 ; exit 1;
+    fi
+}
+
+echo "Welcome to YUMmi installer"
+
+asksym () {
+    read -r optsym
+}
+
+printf "Symlink /usr/bin/yummi to /usr/bin/pacman? (make the \'pacman\' command work) [y/n]: "
+asksym
+
+case $optsym in
+    'y') :;;
+    'n') :;;
+    *)
+        printf "Please answer y or n: "
+        asksym
+        ;;
+esac
+
+echo "Cloning repository to ${SRCDIR} ..." ; git clone https://github.com/joznia/yummi.git ${SRCDIR} > /dev/null 2>&1
+cd ${SRCDIR}
+echo "Copying YUMmi to /usr/bin ..." ; sudo cp $SRC $DEST 
+echo "Setting permissions ..." ; sudo chmod 0755 $DEST
+case $optsym in
+    'y')
+        echo "Symlinking YUMmi to pacman ..."
+        sudo ln -sf $DEST $DESTP
+        sudo chmod 0755 $DESTP
+        ;;
+    'n')
+        :;;
+esac
+
+echo "Removing repository..." ; rm -rf ${SRCDIR}
+

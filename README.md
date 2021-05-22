@@ -2,7 +2,7 @@
 ## dnf/rpm wrapper written in Python and with a pacman syntax
 ### Installation
 #### One command *(recommended)*
-`bash <(curl -SsL https://raw.githubusercontent.com/joznia/yummi/master/oneshot)`
+`bash <(curl -SsL https://raw.githubusercontent.com/joznia/yummi/master/1shot)`
 #### Advanced installation
 `install.sh` arguments:
 * `-u`: uninstall YUMmi
