@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Welcome to yummi.
+# Welcome to YUMmi.
 # This is a dnf/rpm wrapper written in Python and aims to have a syntax similar to Arch's 'pacman'.
 # This is free software licensed under the GNU GPL v3.
 
@@ -8,7 +8,7 @@ import sys
 import os
 import pathlib
 
-helpdoc = '''yummi: --help
+helpdoc = '''YUMmi: --help
 -S     : install a package
 -U     : install a local .rpm
 -Rs    : remove a package

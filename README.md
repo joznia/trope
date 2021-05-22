@@ -1,8 +1,8 @@
-# yummi
+# YUMmi
 ## dnf/rpm wrapper written in Python and with a pacman syntax
 ### Installation
 `install.sh` arguments:
-* `-u`: uninstall yummi
+* `-u`: uninstall YUMmi
 * `-s`: install as usual, but also symlink `/usr/bin/yummi` to `/usr/bin/pacman`
 ~~~
 git clone https://github.com/joznia/yummi.git
