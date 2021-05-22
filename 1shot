@@ -17,19 +17,18 @@ echo "Welcome to YUMmi installer"
 
 asksym () {
     read -r optsym
+    case $optsym in
+        'y') :;;
+        'n') :;;
+        *)
+            printf "Please answer y or n: "
+            asksym
+            ;;
+    esac
 }
 
 printf "Symlink /usr/bin/yummi to /usr/bin/pacman? (make the \'pacman\' command work) [y/n]: "
 asksym
-
-case $optsym in
-    'y') :;;
-    'n') :;;
-    *)
-        printf "Please answer y or n: "
-        asksym
-        ;;
-esac
 
 echo "Cloning repository to ${SRCDIR} ..." ; git clone https://github.com/joznia/yummi.git ${SRCDIR} > /dev/null 2>&1
 cd ${SRCDIR}
