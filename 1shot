@@ -2,7 +2,7 @@
 
 # YUMmi AIO installer
 
-SRCDIR="${HOME}/yummi-oneshot"
+SRCDIR="${HOME}/yummi-1shot"
 SRC="./main.py"
 DEST="/usr/bin/yummi"
 DESTP="/usr/bin/pacman"
