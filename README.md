@@ -1,15 +1,14 @@
 # yummi
-## dnf/rpm wrapper written in Perl and with a pacman syntax
+## dnf/rpm wrapper written in Python and with a pacman syntax
 ### Installation
-`install.pl` arguments:
+`install.sh` arguments:
 * `-u`: uninstall yummi
 * `-s`: install as usual, but also symlink `/usr/bin/yummi` to `/usr/bin/pacman`
 ~~~
-sudo dnf -y install perl-File-Copy
 git clone https://github.com/joznia/yummi.git
 cd yummi
-chmod +x install.pl
-sudo ./install.pl
+chmod +x install.sh
+sudo ./install.sh
 ~~~
 ### Usage
 * `-S`: install a package

@@ -6,6 +6,7 @@
 
 import sys
 import os
+import pathlib
 
 helpdoc = '''yummi: --help
 -S     : install a package
@@ -68,9 +69,11 @@ def S():
 # -U
 def U():
     checksu('-U')
-    if not after: 
+    if pathlib.Path(after):
         cmd = f"dnf localinstall {after}"
         os.system(cmd)
+    elif not after:
+        sys.exit("no rpm(s) given")
     else:
         sys.exit(f"file '{after}' is invalid ")
 
