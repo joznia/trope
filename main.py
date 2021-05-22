@@ -34,8 +34,9 @@ helpdoc = '''yummi: --help
 -Qmq   : remove packages not included in any repositories'''
 
 ## Identifying command-line arguments
-opt = str(sys.argv[1])
-if not sys.argv[1]:
+try:
+    opt = str(sys.argv[1])
+except IndexError:
     opt = ''
 after = ' '.join(sys.argv[2:])
 
@@ -63,10 +64,6 @@ def S():
     checkargs()
     cmd = f"dnf install {after}"
     os.system(cmd)
-
-def test():
-    print(f"{opt}")
-    print(f"{after}")
 
 # -U
 def U():
@@ -258,7 +255,5 @@ elif opt == '-Sw':
     Sw() 
 elif opt == '-Qmq':
     Qmq() 
-elif opt == 'test':
-    test()
 else: 
     print("unknown argument ") 
