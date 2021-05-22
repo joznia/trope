@@ -2,7 +2,7 @@
 
 use File::Copy;
 
-$src = "./main.pl";
+$src = "./main.py";
 $dest = "/usr/bin/yummi";
 $destp = "/usr/bin/pacman";
 

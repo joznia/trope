@@ -34,8 +34,10 @@ helpdoc = '''yummi: --help
 -Qmq   : remove packages not included in any repositories'''
 
 ## Identifying command-line arguments
-opt = sys.argv[1]
-after = sys.argv[2:]
+opt = str(sys.argv[1])
+if not sys.argv[1]:
+    opt = ''
+after = ' '.join(sys.argv[2:])
 
 ## Defining functions
 
@@ -61,6 +63,10 @@ def S():
     checkargs()
     cmd = f"dnf install {after}"
     os.system(cmd)
+
+def test():
+    print(f"{opt}")
+    print(f"{after}")
 
 # -U
 def U():
@@ -96,25 +102,24 @@ def Syu():
 # -Syuu
 def Syuu(): 
     checksu('-Syuu')
-    cmd = "dnf distro-sync"
+    cmd = f"dnf distro-sync"
     os.system(cmd)
 
 
 # -Ss
 def Ss():
     checkargs()
-    cmd = "dnf search {after}"
+    cmd = f"dnf search {after}"
     os.system(cmd)
 
 # -Q
 def Q():
-    if({after} eq '') {
+    if not after:
         cmd = f"rpm -qa"
         os.system(cmd)
-    } else {
+    else:
         cmd = f"rpm -qa {after}"
         os.system(cmd)
-    }
 
 # -Qi
 def Qi():
@@ -156,26 +161,26 @@ def Qc():
 
 # -Qu
 def Qu():
-    cmd = "dnf list updates"
+    cmd = f"dnf list updates"
     os.system(cmd)
 
 # -Sc
 def Sc():
     checksu('-Sc')
-    cmd = "dnf clean all"
+    cmd = f"dnf clean all"
     os.system(cmd)
 
 # -Qtdq
 def Qtdq():
     checksu('-Qtdq')
-    cmd = "dnf autoremove"
+    cmd = f"dnf autoremove"
     os.system(cmd)
 
 # -De
 def De():
     checksu('-De')
     checkargs()
-    cmd = "dnf mark install {after}"
+    cmd = f"dnf mark install {after}"
     os.system(cmd)
 
 # -Dd
@@ -199,31 +204,61 @@ def Qmq():
     os.system(cmd)
 
 ## Processing arguments
-if    ($opt eq '')       { help }
-elsif ($opt eq '--help') { help }
-elsif ($opt eq '-S')     { S }
-elsif ($opt eq '-U')     { U }
-elsif ($opt eq '-Rs')    { Rs }
-elsif ($opt eq '-Rns')   { Rs }
-elsif ($opt eq '-Rsc')   { Rsc }
-elsif ($opt eq '-Sy')    { Sy }
-elsif ($opt eq '-Syu')   { Syu }
-elsif ($opt eq '-Syuu')  { Syuu }
-elsif ($opt eq '-Ss')    { Ss }
-elsif ($opt eq '-Q')     { Q }
-elsif ($opt eq '-Qi')    { Qi }
-elsif ($opt eq '-Si')    { Si }
-elsif ($opt eq '-Ql')    { Ql }
-elsif ($opt eq '-Fl')    { Fl }
-elsif ($opt eq '-Qo')    { Qo }
-elsif ($opt eq '-Qc')    { Qc }
-elsif ($opt eq '-Qu')    { Qu }
-elsif ($opt eq '-Sc')    { Sc }
-elsif ($opt eq '-Scc')   { Sc }
-elsif ($opt eq '-Qtdq')  { Qtdq }
-elsif ($opt eq '-c')     { Qtdq }
-elsif ($opt eq '-De')    { De }
-elsif ($opt eq '-Dd')    { Dd }
-elsif ($opt eq '-Sw')    { Sw }
-elsif ($opt eq '-Qmq')   { Qmq }
-else                     { print "unknown argument " }
+if not opt:
+    help()
+elif opt == '--help':
+    help() 
+elif opt == '-S':
+    S() 
+elif opt == '-U':
+    U() 
+elif opt == '-Rs':
+    Rs() 
+elif opt == '-Rns':
+    Rs() 
+elif opt == '-Rsc':
+    Rsc() 
+elif opt == '-Sy':
+    Sy() 
+elif opt == '-Syu':
+    Syu() 
+elif opt == '-Syuu':
+    Syuu() 
+elif opt == '-Ss':
+    Ss() 
+elif opt == '-Q':
+    Q() 
+elif opt == '-Qi':
+    Qi() 
+elif opt == '-Si':
+    Si() 
+elif opt == '-Ql':
+    Ql() 
+elif opt == '-Fl':
+    Fl() 
+elif opt == '-Qo':
+    Qo() 
+elif opt == '-Qc':
+    Qc() 
+elif opt == '-Qu':
+    Qu() 
+elif opt == '-Sc':
+    Sc() 
+elif opt == '-Scc':
+    Sc() 
+elif opt == '-Qtdq':
+    Qtdq() 
+elif opt == '-c':
+    Qtdq() 
+elif opt == '-De':
+    De() 
+elif opt == '-Dd':
+    Dd() 
+elif opt == '-Sw':
+    Sw() 
+elif opt == '-Qmq':
+    Qmq() 
+elif opt == 'test':
+    test()
+else: 
+    print("unknown argument ") 
