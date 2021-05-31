@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/local/bin/env bash
 
-# YUMmi AIO installer
+# trope AIO installer
 
-SRCDIR="${HOME}/yummi-1shot"
+SRCDIR="${HOME}/trope-1shot"
 SRC="./main.py"
-DEST="/usr/bin/yummi"
-DESTP="/usr/bin/pacman"
+DEST="/usr/local/bin/trope"
+DESTP="/usr/local/bin/pacman"
 
 die () {
     if [ $? -gt 0 ]; then
@@ -13,7 +13,7 @@ die () {
     fi
 }
 
-echo "Welcome to YUMmi installer"
+echo "Welcome to trope installer"
 
 asksym () {
     read -r optsym
@@ -27,16 +27,16 @@ asksym () {
     esac
 }
 
-printf "Symlink /usr/bin/yummi to /usr/bin/pacman? (make the \'pacman\' command work) [y/n]: "
+printf "Symlink /usr/local/bin/trope to /usr/local/bin/pacman? (make the \'pacman\' command work) [y/n]: "
 asksym
 
-echo "Cloning repository to ${SRCDIR} ..." ; git clone https://github.com/joznia/yummi.git ${SRCDIR} > /dev/null 2>&1
+echo "Cloning repository to ${SRCDIR} ..." ; git clone https://github.com/joznia/trope.git ${SRCDIR} > /dev/null 2>&1
 cd ${SRCDIR}
-echo "Copying YUMmi to /usr/bin ..." ; sudo cp $SRC $DEST 
+echo "Copying trope to /usr/local/bin ..." ; sudo cp $SRC $DEST 
 echo "Setting permissions ..." ; sudo chmod 0755 $DEST
 case $optsym in
     'y')
-        echo "Symlinking YUMmi to pacman ..."
+        echo "Symlinking trope to pacman ..."
         sudo ln -sf $DEST $DESTP
         sudo chmod 0755 $DESTP
         ;;

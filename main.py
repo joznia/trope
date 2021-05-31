@@ -1,38 +1,36 @@
 #!/usr/bin/env python3
 
-# Welcome to YUMmi.
-# This is a dnf/rpm wrapper written in Python and aims to have a syntax similar to Arch's 'pacman'.
+# Welcome to TROPE.
+# This is a MacPorts wrapper written in Python and aims to have a syntax similar to Arch's 'pacman'.
 # This is free software licensed under the GNU GPL v3.
 
 import sys
 import os
-import pathlib
 
-helpdoc = '''YUMmi: --help
--S     : install a package
--U     : install a local .rpm
--Rs    : remove a package
--Rns   : remove a package (same as -Rs)
--Rsc   : remove a package and remove orphans
--Syu   : perform a system upgrade
--Syuu  : perform a distribution upgrade
--Ss    : search for a package via regex
--Q     : search for a locally installed package
--Qi    : display installed package information
--Si    : display remote package information
--Ql    : display files provided by an installed package
--Fl    : display files provided by a remote package 
--Qo    : find which package provides which file
--Qc    : show the changelog of a package
--Qu    : list packages which are upgradable
--Sc    : remove now-undownloadable packages from the local package cache
--Scc   : remove all downloaded packages from the local package cache
--Qtdq  : remove orphan packages
--c     : remove orphan packages (same as -Qtdq)
--De    : mark an automatically installed package as manually installed
--Dd    : mark a manually installed package as automatic
--Sw    : download a package without installing it
--Qmq   : remove packages not included in any repositories'''
+helpdoc = '''trope: --help
+-S     : install a port
+-C     : clean working files used to install a port
+-Cc    : clean ALL files used to install a port
+-Rs    : uninstall a port
+-Rns   : uninstall a port (same as -Rs)
+-Rsc   : uninstall a port + dependents (!)
+-Sy    : sync the ports tree
+-Syu   : upgrade all installed ports (also runs -Sy first)
+-Ss    : search for a port via regex
+-Ssg   : search for a port via glob
+-Sse   : search for a port via exact name
+-Q     : list installed ports
+-Qi    : display info about a port
+-Si    : display info about a port (same as -Qi)
+-Ql    : display files provided by an installed port
+-Qu    : list ports which are upgradable
+-Sc    : clean (-C) all installed ports 
+-Scc   : fullclean (-Cc) all installed ports
+-Qtdq  : uninstall orphan ports
+-c     : uninstall orphan ports (same as -Qtdq)
+-De    : mark an automatically installed port as manually installed
+-Dd    : mark a manually installed port as automatic
+-Sw    : download a port without installing it'''
 
 ## Identifying command-line arguments
 try:
@@ -41,19 +39,21 @@ except IndexError:
     opt = ''
 after = ' '.join(sys.argv[2:])
 
+## Command to run when managing packages/ports
+pre = "port -v"
+prea = "port" # used for some commands
+
+## Check if user is root
+if os.geteuid() != 0:
+    sys.exit(f"error: not running as root")
+
 ## Defining functions
-
-# check if user is root
-def checksu(arg):
-    if os.geteuid() != 0:
-        sys.exit(f"option {arg} requires root ")
-
 # no arguments or --help
 def help(): 
     sys.exit(helpdoc)
 
 # no arguments for option
-def checkargs(mis="package(s)"): 
+def checkargs(mis="port(s)"): 
     if not mis:
         pass
     if not after:
@@ -61,146 +61,112 @@ def checkargs(mis="package(s)"):
 
 # -S
 def S(): 
-    checksu('-S')
     checkargs()
-    cmd = f"dnf install {after}"
+    cmd = f"{pre} install {after}"
     os.system(cmd)
 
-# -U
-def U():
-    checksu('-U')
-    if pathlib.Path(after):
-        cmd = f"dnf localinstall {after}"
-        os.system(cmd)
-    elif not after:
-        sys.exit("no rpm(s) given")
-    else:
-        sys.exit(f"file '{after}' is invalid ")
+# -C
+def C(): 
+    checkargs()
+    cmd = f"{pre} clean {after}"
+    os.system(cmd)
+
+# -Cc
+def Cc(): 
+    checkargs()
+    cmd = f"{pre} clean --all {after}"
+    os.system(cmd)
 
 # -Rs
 def Rs(): 
-    checksu('-Rs')
     checkargs()
-    cmd = f"dnf remove {after}"
+    cmd = f"{pre} uninstall --follow-dependencies {after}"
     os.system(cmd)
 
 # -Rsc
 def Rsc(): 
-    checksu('-Rsc')
     checkargs()
-    cmd = f"dnf remove {after} && dnf autoremove"
+    cmd = f"{pre} uninstall --follow-dependencies --follow-dependents {after} && {pre} uninstall leaves"
     os.system(cmd)
 
+# -Sy
+def Sy():
+    cmd = f"{pre} selfupdate"
 
 # -Syu
 def Syu(): 
-    checksu('-Syu')
-    cmd = f"dnf upgrade --refresh"
+    cmd = f"{pre} sync && {pre} upgrade outdated"
     os.system(cmd)
-
-
-# -Syuu
-def Syuu(): 
-    checksu('-Syuu')
-    cmd = f"dnf distro-sync"
-    os.system(cmd)
-
 
 # -Ss
 def Ss():
     checkargs()
-    cmd = f"dnf search {after}"
+    cmd = f"{pre} search --regex {after}"
+    os.system(cmd)
+
+# -Ssg
+def Ssg():
+    checkargs()
+    cmd = f"{pre} search --glob {after}"
+    os.system(cmd)
+
+# -Sse
+def Sse():
+    checkargs()z
+    cmd = f"{pre} search --exact {after}"
     os.system(cmd)
 
 # -Q
 def Q():
     if not after:
-        cmd = f"rpm -qa"
+        cmd = f"{prea} echo installed"
         os.system(cmd)
     else:
-        cmd = f"rpm -qa {after}"
+        cmd = f"{prea} installed {after}"
         os.system(cmd)
 
 # -Qi
 def Qi():
     checkargs()
-    cmd = f"dnf info installed {after}"
-    os.system(cmd)
-
-# -Si
-def Si():
-    checkargs()
-    cmd = f"dnf info {after}"
+    cmd = f"{pre} info {after}"
     os.system(cmd)
 
 # -Ql
 def Ql():
     checkargs()
-    cmd = f"dnf repoquery -l {after}"
-    os.system(cmd)
-
-# -Fl
-def Fl():
-    checkargs()
-    cmd = f"dnf repoquery -l {after}"
-    os.system(cmd)
-
-# -Qo
-def Qo():
-    if not after:
-        cmd = f"rpm -qf {after}"
-        os.system(cmd)
-    else:
-        sys.exit("file '{after}' invalid ")
-
-# -Qc
-def Qc():
-    checkargs()
-    cmd = f"dnf changelog {after}"
+    cmd = f"{pre} contents {after}"
     os.system(cmd)
 
 # -Qu
 def Qu():
-    cmd = f"dnf list updates"
+    cmd = f"{pre} outdated"
     os.system(cmd)
 
 # -Sc
 def Sc():
-    checksu('-Sc')
-    cmd = f"dnf clean all"
+    cmd = f"{pre} clean installed"
+    os.system(cmd)
+
+# -Scc
+def Scc():
+    cmd = f"{pre} clean --all installed"
     os.system(cmd)
 
 # -Qtdq
 def Qtdq():
-    checksu('-Qtdq')
-    cmd = f"dnf autoremove"
+    cmd = f"{pre} uninstall leaves"
     os.system(cmd)
 
 # -De
 def De():
-    checksu('-De')
     checkargs()
-    cmd = f"dnf mark install {after}"
+    cmd = f"{pre} setrequested {after}"
     os.system(cmd)
 
 # -Dd
 def Dd():
-    checksu('-Dd')
     checkargs()
-    cmd = f"dnf mark remove {after}"
-    os.system(cmd)
-
-# -Sw
-def Sw():
-    checksu('-Sw')
-    checkargs()
-    cmd = f"dnf download {after}"
-    os.system(cmd)
-
-# -Qmq
-def Qmq():
-    checksu('-Qmq')
-    cmd = f"dnf repoquery --extras"
+    cmd = f"{pre} setunrequested {after}"
     os.system(cmd)
 
 ## Processing arguments
@@ -212,6 +178,10 @@ elif opt == '-S':
     S() 
 elif opt == '-U':
     U() 
+elif opt == '-C':
+    C() 
+elif opt == '-Cc':
+    Cc() 
 elif opt == '-Rs':
     Rs() 
 elif opt == '-Rns':
@@ -222,8 +192,6 @@ elif opt == '-Sy':
     Sy() 
 elif opt == '-Syu':
     Syu() 
-elif opt == '-Syuu':
-    Syuu() 
 elif opt == '-Ss':
     Ss() 
 elif opt == '-Q':
@@ -231,21 +199,15 @@ elif opt == '-Q':
 elif opt == '-Qi':
     Qi() 
 elif opt == '-Si':
-    Si() 
+    Qi() 
 elif opt == '-Ql':
     Ql() 
-elif opt == '-Fl':
-    Fl() 
-elif opt == '-Qo':
-    Qo() 
-elif opt == '-Qc':
-    Qc() 
 elif opt == '-Qu':
     Qu() 
 elif opt == '-Sc':
     Sc() 
 elif opt == '-Scc':
-    Sc() 
+    Scc() 
 elif opt == '-Qtdq':
     Qtdq() 
 elif opt == '-c':
@@ -254,9 +216,5 @@ elif opt == '-De':
     De() 
 elif opt == '-Dd':
     Dd() 
-elif opt == '-Sw':
-    Sw() 
-elif opt == '-Qmq':
-    Qmq() 
 else: 
     print("unknown argument ") 

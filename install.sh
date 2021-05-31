@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# YUMmi installer
+# TROPE installer
 
 if [ "$EUID" -ne 0 ]; then
     echo 'This installer requires root'
@@ -15,8 +15,8 @@ die () {
 }
 
 SRC="./main.py"
-DEST="/usr/bin/yummi"
-DESTP="/usr/bin/pacman"
+DEST="/usr/local/bin/trope"
+DESTP="/usr/local/bin/pacman"
 
 base () {
     cp $SRC $DEST 
