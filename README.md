@@ -1,43 +1,39 @@
-# YUMmi
-## dnf/rpm wrapper written in Python and with a pacman syntax
+# trope
+## MacPorts wrapper written in Python and with a pacman syntax
 ### Installation
 #### One command *(recommended)*
-`bash <(curl -SsL https://raw.githubusercontent.com/joznia/yummi/master/1shot)`
+`bash <(curl -SsL https://raw.githubusercontent.com/joznia/trope/master/1shot)`
 #### Advanced installation
 `install.sh` arguments:
-* `-u`: uninstall YUMmi
-* `-s`: install as usual, but also symlink `/usr/bin/yummi` to `/usr/bin/pacman`
+* `-u`: uninstall trope
+* `-s`: install as usual, but also symlink `/usr/local/bin/trope` to `/usr/local/bin/pacman`
 ~~~
-git clone https://github.com/joznia/yummi.git
-cd yummi
+git clone https://github.com/joznia/trope.git
+cd trope
 chmod +x install.sh
 sudo ./install.sh
 ~~~
 ### Usage
-* `-S`: install a package
-* `-U`: install a local `.rpm`
-* `-Rs`: remove a package
-* `-Rns`: remove a package (same as -Rs)
-* `-Rsc`: remove a package and remove orphans
-* `-Sy`: sync the repositories
-* `-Syu`: perform a system upgrade
-* `-Syuu`: perform a distribution upgrade
-* `-Ss`: search for a package via regex
-* `-Q`: search for a locally installed package
-* `-Qi`: display installed package information
-* `-Si`: display remote package information
-* `-Ql`: display files provided by an installed package
-* `-Fl`: display files provided by a remote package
-* `-Qo`: find which package provides which file
-* `-Qc`: show the changelog of a package
-* `-Qu`: list packages which are upgradable
-* `-Sc`: remove now-undownloadable packages from the local package cache
-* `-Scc`: remove all downloaded packages from the local package cache
-* `-Qtdq`: remove orphan packages
-* `-c`: remove orphan packages (same as -Qtdq)
-* `-De`: mark an automatically installed package as manually installed
-* `-Dd`: mark a manually installed package as automatic
-* `-Sw`: download a package without installing it
-* `-Qmq`: remove packages not included in any repositories 
-
+* `-S`: install a port
+* `-C`: clean working files used to install a port
+* `-Cc`: clean ALL files used to install a port
+* `-Rs`: uninstall a port
+* `-Rns`: uninstall a port (same as -Rs)
+* `-Rsc`: uninstall a port + dependents (!)
+* `-Sy`: sync the ports tree
+* `-Syu`: upgrade all installed ports (also runs -Sy first)
+* `-Ss`: search for a port via regex
+* `-Ssg`: search for a port via glob
+* `-Sse`: search for a port via exact name
+* `-Q`: list installed ports
+* `-Qi`: display info about a port
+* `-Si`: display info about a port (same as -Qi)
+* `-Ql`: display files provided by an installed port
+* `-Qu`: list ports which are upgradable
+* `-Sc`: clean (-C) all installed ports 
+* `-Scc`: fullclean (-Cc) all installed ports
+* `-Qtdq`: uninstall orphan ports
+* `-c`: uninstall orphan ports (same as -Qtdq)
+* `-De`: mark an automatically installed port as manually installed
+* `-Dd`: mark a manually installed port as automatic
 

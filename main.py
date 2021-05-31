@@ -29,8 +29,7 @@ helpdoc = '''trope: --help
 -Qtdq  : uninstall orphan ports
 -c     : uninstall orphan ports (same as -Qtdq)
 -De    : mark an automatically installed port as manually installed
--Dd    : mark a manually installed port as automatic
--Sw    : download a port without installing it'''
+-Dd    : mark a manually installed port as automatic'''
 
 ## Identifying command-line arguments
 try:
@@ -40,7 +39,7 @@ except IndexError:
 after = ' '.join(sys.argv[2:])
 
 ## Command to run when managing packages/ports
-pre = "port -v"
+pre = "port -v" # used for most things, verbose output
 prea = "port" # used for some commands
 
 ## Check if user is root
@@ -112,7 +111,7 @@ def Ssg():
 
 # -Sse
 def Sse():
-    checkargs()z
+    checkargs()
     cmd = f"{pre} search --exact {after}"
     os.system(cmd)
 
@@ -176,8 +175,6 @@ elif opt == '--help':
     help() 
 elif opt == '-S':
     S() 
-elif opt == '-U':
-    U() 
 elif opt == '-C':
     C() 
 elif opt == '-Cc':
@@ -193,7 +190,11 @@ elif opt == '-Sy':
 elif opt == '-Syu':
     Syu() 
 elif opt == '-Ss':
-    Ss() 
+    Ss()
+elif opt == '-Ssg':
+    Ssg() 
+elif opt == '-Sse':
+    Sse() 
 elif opt == '-Q':
     Q() 
 elif opt == '-Qi':
