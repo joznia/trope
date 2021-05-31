@@ -10,7 +10,7 @@ import os
 helpdoc = '''trope: --help
 -S     : install a port
 -C     : clean working files used to install a port
--Cc    : clean ALL files used to install a port
+-Cc    : clean ALL files used to install a port (!)
 -Rs    : uninstall a port
 -Rns   : uninstall a port (same as -Rs)
 -Rsc   : uninstall a port + dependents (!)
