@@ -93,6 +93,7 @@ def Rsc():
 # -Sy
 def Sy():
     cmd = f"{pre} selfupdate"
+    os.system(cmd)
 
 # -Syu
 def Syu(): 
