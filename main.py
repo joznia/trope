@@ -43,8 +43,10 @@ pre = "port -v" # used for most things, verbose output
 prea = "port" # used for some commands
 
 ## Check if user is root
-if os.geteuid() != 0:
-    sys.exit(f"error: not running as root")
+def checksu():
+    if os.geteuid() != 0:
+        sys.exit(f"error: not running as root")
+#checksu()
 
 ## Defining functions
 # no arguments or --help
@@ -174,48 +176,70 @@ if not opt:
 elif opt == '--help':
     help() 
 elif opt == '-S':
+    checksu()
     S() 
 elif opt == '-C':
+    checksu()
     C() 
 elif opt == '-Cc':
+    checksu()
     Cc() 
 elif opt == '-Rs':
+    checksu()
     Rs() 
 elif opt == '-Rns':
+    checksu()
     Rs() 
 elif opt == '-Rsc':
+    checksu()
     Rsc() 
 elif opt == '-Sy':
+    checksu()
     Sy() 
 elif opt == '-Syu':
+    checksu()
     Syu() 
 elif opt == '-Ss':
+    checksu()
     Ss()
 elif opt == '-Ssg':
+    checksu()
     Ssg() 
 elif opt == '-Sse':
+    checksu()
     Sse() 
 elif opt == '-Q':
+    checksu()
     Q() 
 elif opt == '-Qi':
+    checksu()
     Qi() 
 elif opt == '-Si':
+    checksu()
     Qi() 
 elif opt == '-Ql':
+    checksu()
     Ql() 
 elif opt == '-Qu':
+    checksu()
     Qu() 
 elif opt == '-Sc':
+    checksu()
     Sc() 
 elif opt == '-Scc':
+    checksu()
     Scc() 
 elif opt == '-Qtdq':
+    checksu()
     Qtdq() 
 elif opt == '-c':
+    checksu()
     Qtdq() 
 elif opt == '-De':
+    checksu()
     De() 
 elif opt == '-Dd':
+    checksu()
     Dd() 
 else: 
     print("unknown argument ") 
