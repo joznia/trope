@@ -26,8 +26,8 @@ helpdoc = '''trope: --help
 -Qu    : list ports which are upgradable
 -Sc    : clean (-C) all installed ports 
 -Scc   : fullclean (-Cc) all installed ports
--Qtdq  : uninstall orphan ports
--c     : uninstall orphan ports (same as -Qtdq)
+-Qtdq  : uninstall orphan ports 
+-c     : uninstall orphan ports (same as -Qtdq) 
 -De    : mark an automatically installed port as manually installed
 -Dd    : mark a manually installed port as automatic'''
 
@@ -156,7 +156,7 @@ def Scc():
 
 # -Qtdq
 def Qtdq():
-    cmd = f"{pre} uninstall leaves"
+    cmd = f"{pre} uninstall rleaves"
     os.system(cmd)
 
 # -De
