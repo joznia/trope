@@ -97,7 +97,7 @@ def Sy():
 
 # -Syu
 def Syu(): 
-    cmd = f"{pre} sync && {pre} upgrade outdated"
+    cmd = f"{pre} selfupdate && {pre} upgrade outdated"
     os.system(cmd)
 
 # -Ss
